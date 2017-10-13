@@ -1,0 +1,98 @@
+        -:    0:Source:testDrawCard.c
+        -:    0:Graph:testDrawCard.gcno
+        -:    0:Data:testDrawCard.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:#include "dominion.h"
+        -:    2:#include "dominion_helpers.h"
+        -:    3:#include <string.h>
+        -:    4:#include <stdio.h>
+        -:    5:#include <assert.h>
+        -:    6:#include "rngs.h"
+        -:    7:
+        -:    8:#define DEBUG 0
+        -:    9:#define NOISY_TEST 1
+        -:   10:
+     2000:   11:int checkDrawCard(int p, struct gameState *post) {
+        -:   12:  struct gameState pre;
+     2000:   13:  memcpy (&pre, post, sizeof(struct gameState));
+        -:   14:
+        -:   15:  int r;
+        -:   16:  //  printf ("drawCard PRE: p %d HC %d DeC %d DiC %d\n",
+        -:   17:  //	  p, pre.handCount[p], pre.deckCount[p], pre.discardCount[p]);
+        -:   18:    
+     2000:   19:  r = drawCard (p, post);
+        -:   20:
+        -:   21:  //printf ("drawCard POST: p %d HC %d DeC %d DiC %d\n",
+        -:   22:  //      p, post->handCount[p], post->deckCount[p], post->discardCount[p]);
+        -:   23:
+     2000:   24:  if (pre.deckCount[p] > 0) {
+     1998:   25:    pre.handCount[p]++;
+     1998:   26:    pre.hand[p][pre.handCount[p]-1] = pre.deck[p][pre.deckCount[p]-1];
+     1998:   27:    pre.deckCount[p]--;
+        2:   28:  } else if (pre.discardCount[p] > 0) {
+        2:   29:    memcpy(pre.deck[p], post->deck[p], sizeof(int) * pre.discardCount[p]);
+        2:   30:    memcpy(pre.discard[p], post->discard[p], sizeof(int)*pre.discardCount[p]);
+        2:   31:    pre.hand[p][post->handCount[p]-1] = post->hand[p][post->handCount[p]-1];
+        2:   32:    pre.handCount[p]++;
+        2:   33:    pre.deckCount[p] = pre.discardCount[p]-1;
+        2:   34:    pre.discardCount[p] = 0;
+        -:   35:  }
+        -:   36:
+     2000:   37:  assert (r == 0);
+        -:   38:
+     2000:   39:  assert(memcmp(&pre, post, sizeof(struct gameState)) == 0);
+     2000:   40:}
+        -:   41:
+        1:   42:int main () {
+        -:   43:
+        -:   44:  int i, n, r, p, deckCount, discardCount, handCount;
+        -:   45:
+        1:   46:  int k[10] = {adventurer, council_room, feast, gardens, mine,
+        -:   47:	       remodel, smithy, village, baron, great_hall};
+        -:   48:
+        -:   49:  struct gameState G;
+        -:   50:
+        1:   51:  printf ("Testing drawCard.\n");
+        -:   52:
+        1:   53:  printf ("RANDOM TESTS.\n");
+        -:   54:
+        1:   55:  SelectStream(2);
+        1:   56:  PutSeed(3);
+        -:   57:
+     2001:   58:  for (n = 0; n < 2000; n++) {
+ 52602000:   59:    for (i = 0; i < sizeof(struct gameState); i++) {
+ 52600000:   60:      ((char*)&G)[i] = floor(Random() * 256);
+        -:   61:    }
+     2000:   62:    p = floor(Random() * 2);
+     2000:   63:    G.deckCount[p] = floor(Random() * MAX_DECK);
+     2000:   64:    G.discardCount[p] = floor(Random() * MAX_DECK);
+     2000:   65:    G.handCount[p] = floor(Random() * MAX_HAND);
+     2000:   66:    checkDrawCard(p, &G);
+        -:   67:  }
+        -:   68:
+        1:   69:  printf ("ALL TESTS OK\n");
+        -:   70:
+        1:   71:  exit(0);
+        -:   72:
+        -:   73:  printf ("SIMPLE FIXED TESTS.\n");
+        -:   74:  for (p = 0; p < 2; p++) {
+        -:   75:    for (deckCount = 0; deckCount < 5; deckCount++) {
+        -:   76:      for (discardCount = 0; discardCount < 5; discardCount++) {
+        -:   77:	for (handCount = 0; handCount < 5; handCount++) {
+        -:   78:	  memset(&G, 23, sizeof(struct gameState)); 
+        -:   79:	  r = initializeGame(2, k, 1, &G);
+        -:   80:	  G.deckCount[p] = deckCount;
+        -:   81:	  memset(G.deck[p], 0, sizeof(int) * deckCount);
+        -:   82:	  G.discardCount[p] = discardCount;
+        -:   83:	  memset(G.discard[p], 0, sizeof(int) * discardCount);
+        -:   84:	  G.handCount[p] = handCount;
+        -:   85:	  memset(G.hand[p], 0, sizeof(int) * handCount);
+        -:   86:	  checkDrawCard(p, &G);
+        -:   87:	}
+        -:   88:      }
+        -:   89:    }
+        -:   90:  }
+        -:   91:
+        -:   92:  return 0;
+        -:   93:}
