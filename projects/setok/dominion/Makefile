@@ -33,7 +33,30 @@ runtests: testDrawCard
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
 
-all: playdom player testDrawCard testBuyCard badTestDrawCard
+unittestresults.out: unittest1.c dominion.c rngs.c
+	echo -e "Results for running Assignment 3 tests:\n" > unittestresults.out
+
+	echo "unittest1.c:" >> unittestresults.out
+	gcc -o unittest1 dominion.c rngs.c unittest1.c $(CFLAGS)
+	./unittest1 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+
+	echo  "unittest2.c:"  >> unittestresults.out
+	gcc -o unittest2 dominion.c rngs.c unittest2.c $(CFLAGS)
+	./unittest2 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+
+	echo  "unittest3.c:"  >> unittestresults.out
+	gcc -o unittest3 dominion.c rngs.c unittest3.c $(CFLAGS)
+	./unittest3 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+
+	echo  "unittest4.c:"  >> unittestresults.out
+	gcc -o unittest4 dominion.c rngs.c unittest4.c $(CFLAGS)
+	./unittest4 >> unittestresults.out
+	gcov dominion.c >> unittestresults.out
+
+all: playdom player testDrawCard testBuyCard badTestDrawCard 
 
 clean:
-	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe unittest1 unittest2 unittest3 unittest4 unittestresults.out
