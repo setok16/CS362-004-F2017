@@ -17,7 +17,6 @@ int main() {
 	initializeGame(numPlayers, k, randSeed, &state);
 
 	// If numPlayers == 2, all victory cards have a count of 8
-	printf("province count: %d\n", state.supplyCount[province]);
 
 	// Testing for game over state right after initialization
 	if (!isGameOver(&state)) {

@@ -37,10 +37,10 @@ int main() {
 	state.handCount[0] = 1;
 	state.discardCount[0] = 2;
 	state.deckCount[0] = 3;
-	if (scoreFor(0, &state) == 20) {
+	if (scoreFor(0, &state) == 22) {
 		printf("scoreFor(): PASS got correct score after adding victory cards.\n");
 	} else {
-		printf("scoreFor(): FAIL got incorrect score after adding victory cards. Should be 20. Got %d\n", scoreFor(0,&state));
+		printf("scoreFor(): FAIL got incorrect score after adding victory cards. Should be 22. Got %d\n", scoreFor(0,&state));
 	}
 	// P.S. These tests fail because the implementation is incorrect when looping from deck to check for victory cards
 

@@ -15,7 +15,6 @@ int main() {
 	int numPlayers = 2;
 
 	initializeGame(numPlayers, k, randSeed, &state);
-	printf("handcards: %d\n", numHandCards(&state));
 
 	if (numHandCards(&state) == 5) {
 		printf("numHandCards(): PASS player starts off with 5 cards in hand.\n");
