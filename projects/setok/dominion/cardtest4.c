@@ -13,7 +13,7 @@ int main() {
 	int k[10] = {adventurer, gardens, embargo, village, minion, mine, cutpurse, sea_hag, tribute, smithy};
 	int randSeed = 10;
 	int numPlayers = 2;
-	int handPos, choice1 = village, choice2 = mine, choice3, choice4, bonus;
+	int handPos, choice1 = copper, choice2 = mine, choice3, choice4, bonus;
 	handPos = choice3 = choice4 = bonus = 0;
 	int i = 0;
 
@@ -27,10 +27,10 @@ int main() {
 	int discardCountPost = state.discardCount[0];
  
 	// Checking player hand
-	if (handCountPrev - handCountPost == 1) {
-		printf("remodel: PASS hand count decreased by 1.\n");
+	if (handCountPrev - handCountPost == 2) {
+		printf("remodel: PASS hand count decreased by 2.\n");
 	} else {
-		printf("remodel: FAIL hand count should decrease by 1. Changed by %d.\n",handCountPrev-handCountPost);
+		printf("remodel: FAIL hand count should decrease by 2. Changed by %d.\n",handCountPrev-handCountPost);
 	}
 
 	// Checking player discard pile
@@ -62,16 +62,15 @@ int main() {
 	}
 
 	// Checking for correct failure if cost of choice2 is too high
-	choice2 = province;
+	choice1 = copper; // cost = 0
+	choice2 = mine; // cost = 8
 	initializeGame(numPlayers, k, randSeed, &state);
 	result = remodel_card(choice1, choice2, choice3, &state, handPos, &bonus);
 	if (result) {
 		printf("remodel: PASS remodel function returns a -1 when card is unaffordable.\n");
 	} else {
-		printf("remodel: PASS remodel function returns a 0 when card is unaffordable.\n");
+		printf("remodel: FAIL remodel function returns a 0 when card is unaffordable.\n");
 	}
-
-
 
 	return 0;
 }
