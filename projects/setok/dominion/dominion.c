@@ -668,7 +668,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     {
     case adventurer:
 		// Refactored
-		return adventurer_card(card, choice1, choice2, choice3, state, handPos, bonus);
+		return adventurer_card(choice1, choice2, choice3, state, handPos, bonus);
 			
     case council_room:
       //+4 Cards
@@ -752,19 +752,19 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 			
     case mine:
 		// Refactored
-		return mine_card(card, choice1, choice2, choice3, state, handPos, bonus);
+		return mine_card(choice1, choice2, choice3, state, handPos, bonus);
 			
     case remodel:
 		// Refactored
-		return remodel_card(card, choice1, choice2, choice3, state, handPos, bonus);
+		return remodel_card(choice1, choice2, choice3, state, handPos, bonus);
 		
     case smithy:
 		// Refactored
-		return smithy_card(card, choice1, choice2, choice3, state, handPos, bonus);
+		return smithy_card(choice1, choice2, choice3, state, handPos, bonus);
 		
     case village:
 		// Refactored
-		return village_card(card, choice1, choice2, choice3, state, handPos, bonus);
+		return village_card(choice1, choice2, choice3, state, handPos, bonus);
 		
     case baron:
       state->numBuys++;//Increase buys by 1!
@@ -1246,7 +1246,7 @@ int updateCoins(int player, struct gameState *state, int bonus)
 
 // Refactored adventurer function (By Kotaro 10/04/17)
 // Contains a bug (search for keyword "bug")
-int adventurer_card(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
+int adventurer_card(int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
 {
 	int i;
 	int currentPlayer = whoseTurn(state);
@@ -1268,8 +1268,9 @@ int adventurer_card(int card, int choice1, int choice2, int choice3, struct game
 		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
 		  drawntreasure++;
 		else{
-		  temphand[z]=cardDrawn+1; // before: temphand[z]=cardDrawn		bug: temphand[z]=cardDrawn+1
-		  state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
+		  temphand[z]=cardDrawn; 
+		  // before: state->handCount[currentPlayer]--;		bug: state->handCount[currentPlayer]++;
+		  state->handCount[currentPlayer]++; //this should just remove the top card (the most recently drawn one).
 		  z++;
 		}
 		  }
@@ -1282,7 +1283,7 @@ int adventurer_card(int card, int choice1, int choice2, int choice3, struct game
 
 // Refactored smithy function (By Kotaro 10/04/17)
 // Contains a bug (search for keyword "bug")
-int smithy_card(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
+int smithy_card(int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
 {
 	int i;
 	int currentPlayer = whoseTurn(state);
@@ -1301,7 +1302,7 @@ int smithy_card(int card, int choice1, int choice2, int choice3, struct gameStat
 
 // Refactored village function (By Kotaro 10/04/17)
 // Contains a bug (search for keyword "bug")
-int village_card(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
+int village_card(int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
 {
   int currentPlayer = whoseTurn(state);
 
@@ -1318,7 +1319,7 @@ int village_card(int card, int choice1, int choice2, int choice3, struct gameSta
 
 // Refactored mine function (By Kotaro 10/04/17)
 // Contains a bug (search for keyword "bug")
-int mine_card(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
+int mine_card(int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
 {
 	int i;
 	int j;
@@ -1360,7 +1361,7 @@ int mine_card(int card, int choice1, int choice2, int choice3, struct gameState 
 }
 
 // Refactored remodel function (By Kotaro 10/04/17)
-int remodel_card(int card, int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
+int remodel_card(int choice1, int choice2, int choice3, struct gameState *state, int handPos, int *bonus) 
 {
 	int i;
 	int j;
